@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Información de tu dispositivo</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #101114;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 500px;
+      background: #1c1e23;
+      padding: 25px;
+      border-radius: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 0;
+    }
+
+    .dato {
+      background: #292c33;
+      padding: 15px;
+      margin-top: 12px;
+      border-radius: 12px;
+    }
+
+    .titulo {
+      font-size: 13px;
+      color: #aaa;
+      margin-bottom: 5px;
+    }
+
+    .valor {
+      font-size: 17px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+
+    <h1>📱 Tu dispositivo</h1>
+
+    <div class="dato">
+      <div class="titulo">Sistema operativo</div>
+      <div class="valor" id="os">Detectando...</div>
+    </div>
+
+    <div class="dato">
+      <div class="titulo">Navegador</div>
+      <div class="valor" id="browser">Detectando...</div>
+    </div>
+
+    <div class="dato">
+      <div class="titulo">Dispositivo</div>
+      <div class="valor" id="device">Detectando...</div>
+    </div>
+
+    <div class="dato">
+      <div class="titulo">Resolución</div>
+      <div class="valor" id="resolution">Detectando...</div>
+    </div>
+
+    <div class="dato">
+      <div class="titulo">Idioma</div>
+      <div class="valor" id="language">Detectando...</div>
+    </div>
+
+    <div class="dato">
+      <div class="titulo">Zona horaria</div>
+      <div class="valor" id="timezone">Detectando...</div>
+    </div>
+
+  </div>
+
+<script>
+
+const ua = navigator.userAgent;
+
+function detectarOS() {
+
+  if (/Android/i.test(ua))
+    return "Android";
+
+  if (/iPhone|iPad|iPod/i.test(ua))
+    return "iOS";
+
+  if (/Windows/i.test(ua))
+    return "Windows";
+
+  if (/Macintosh/i.test(ua))
+    return "macOS";
+
+  if (/Linux/i.test(ua))
+    return "Linux";
+
+  return "Desconocido";
+}
+
+function detectarNavegador() {
+
+  if (/Edg/i.test(ua))
+    return "Microsoft Edge";
+
+  if (/Chrome/i.test(ua))
+    return "Google Chrome";
+
+  if (/Firefox/i.test(ua))
+    return "Firefox";
+
+  if (/Safari/i.test(ua))
+    return "Safari";
+
+  return "Desconocido";
+}
+
+function detectarDispositivo() {
+
+  if (/iPhone/i.test(ua))
+    return "📱 iPhone";
+
+  if (/iPad/i.test(ua))
+    return "📱 iPad";
+
+  if (/Android/i.test(ua))
+    return "📱 Android";
+
+  return "💻 Computadora";
+}
+
+document.getElementById("os").textContent =
+  detectarOS();
+
+document.getElementById("browser").textContent =
+  detectarNavegador();
+
+document.getElementById("device").textContent =
+  detectarDispositivo();
+
+document.getElementById("resolution").textContent =
+  screen.width + " × " + screen.height + " px";
+
+document.getElementById("language").textContent =
+  navigator.language;
+
+document.getElementById("timezone").textContent =
+  Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+</script>
+
+</body>
+</html>
