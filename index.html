@@ -64,6 +64,11 @@
   <h1>📱 Tu dispositivo</h1>
 
   <div class="dato">
+    <div class="titulo">Ubicación aproximada</div>
+    <div class="valor" id="location">Obteniendo ubicación...</div>
+  </div>
+
+  <div class="dato">
     <div class="titulo">Modelo</div>
     <div class="valor" id="device">Detectando...</div>
   </div>
@@ -100,121 +105,75 @@
 const ua = navigator.userAgent;
 
 function detectarOS() {
-
-  if (/Android/i.test(ua))
-    return "Android";
-
-  if (/iPhone|iPad|iPod/i.test(ua))
-    return "iOS";
-
-  if (/Windows/i.test(ua))
-    return "Windows";
-
-  if (/Macintosh/i.test(ua))
-    return "macOS";
-
-  if (/Linux/i.test(ua))
-    return "Linux";
-
+  if (/Android/i.test(ua)) return "Android";
+  if (/iPhone|iPad|iPod/i.test(ua)) return "iOS";
+  if (/Windows/i.test(ua)) return "Windows";
+  if (/Macintosh/i.test(ua)) return "macOS";
+  if (/Linux/i.test(ua)) return "Linux";
   return "Desconocido";
 }
-
 
 function detectarNavegador() {
-
-  if (/Edg/i.test(ua))
-    return "Microsoft Edge";
-
-  if (/OPR/i.test(ua))
-    return "Opera";
-
-  if (/Chrome/i.test(ua))
-    return "Google Chrome";
-
-  if (/Firefox/i.test(ua))
-    return "Firefox";
-
-  if (/Safari/i.test(ua))
-    return "Safari";
-
+  if (/Edg/i.test(ua)) return "Microsoft Edge";
+  if (/OPR/i.test(ua)) return "Opera";
+  if (/Chrome/i.test(ua)) return "Google Chrome";
+  if (/Firefox/i.test(ua)) return "Firefox";
+  if (/Safari/i.test(ua)) return "Safari";
   return "Desconocido";
 }
 
-
 function detectarDispositivo() {
-
-  if (/iPhone/i.test(ua))
-    return "iPhone";
-
-  if (/iPad/i.test(ua))
-    return "iPad";
-
-  if (/Android/i.test(ua))
-    return "Android";
-
+  if (/iPhone/i.test(ua)) return "iPhone";
+  if (/iPad/i.test(ua)) return "iPad";
+  if (/Android/i.test(ua)) return "Android";
   return "Computadora";
 }
 
-
-document.getElementById("os").textContent =
-  detectarOS();
-
-document.getElementById("browser").textContent =
-  detectarNavegador();
-
-document.getElementById("resolution").textContent =
-  screen.width + " × " + screen.height + " px";
-
-document.getElementById("language").textContent =
-  navigator.language;
-
-document.getElementById("timezone").textContent =
-  Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-
-/* Intentar obtener el modelo */
-async function obtenerModelo() {
-
-  const elemento =
-    document.getElementById("device");
-
-  if (navigator.userAgentData) {
-
-    try {
-
-      const datos =
-        await navigator.userAgentData.getHighEntropyValues([
-          "model",
-          "platform",
-          "platformVersion",
-          "mobile"
-        ]);
-
-      if (datos.model) {
-
-        elemento.textContent =
-          datos.model;
-
-        return;
-      }
-
-    } catch (error) {
-
-      console.log(
-        "No se pudo obtener el modelo:",
-        error
-      );
-
+/* Detección de Ubicación Aproximada por IP */
+async function obtenerUbicacion() {
+  const elem = document.getElementById("location");
+  try {
+    const res = await fetch('https://ipapi.co/json/');
+    const datos = await res.json();
+    if (datos.city && datos.country_name) {
+      elem.textContent = `${datos.city}, ${datos.region} (${datos.country_name})`;
+    } else {
+      elem.textContent = "Ubicación no disponible";
     }
+  } catch (error) {
+    elem.textContent = "Error al obtener ubicación";
   }
-
-  elemento.textContent =
-    detectarDispositivo() +
-    " (modelo no disponible)";
 }
 
+document.getElementById("os").textContent = detectarOS();
+document.getElementById("browser").textContent = detectarNavegador();
+document.getElementById("resolution").textContent = screen.width + " × " + screen.height + " px";
+document.getElementById("language").textContent = navigator.language;
+document.getElementById("timezone").textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+async function obtenerModelo() {
+  const elemento = document.getElementById("device");
+  if (navigator.userAgentData) {
+    try {
+      const datos = await navigator.userAgentData.getHighEntropyValues([
+        "model",
+        "platform",
+        "platformVersion",
+        "mobile"
+      ]);
+      if (datos.model) {
+        elemento.textContent = datos.model;
+        return;
+      }
+    } catch (error) {
+      console.log("No se pudo obtener el modelo:", error);
+    }
+  }
+  elemento.textContent = detectarDispositivo() + " (modelo no disponible)";
+}
 
 obtenerModelo();
+obtenerUbicacion();
 
 </script>
 
